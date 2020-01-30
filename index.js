@@ -81,16 +81,15 @@ app.post('/blog-api/nuevo-comentario', jsonParser, (req, res) => {
     let title = req.body.title;
     let author = req.body.author;
     let content = req.body.content;
-
-    console.log(title);
-    console.log(author);
-    console.log(content);
+    let date = req.body.date;
+    let id = req.body.id;
 
 
     if(!title || !content || !author){
         res.statusMessage = "There is a Missing Field in body";
         return res.status(406).send();
     }
+
     let newblog = {
         title,
         content,
@@ -98,14 +97,14 @@ app.post('/blog-api/nuevo-comentario', jsonParser, (req, res) => {
         date,
         _id: uuid.v4()
      };
-     
+
     BlogList.create(newblog)
         .then(_response => {
-            res.status(201).json(newblog);
+            return res.status(201).json(newblog);
         })
         .catch(err => {
             res.statusMessage = "Something went wrong with the Database";
-            return res.status(501).send();
+            return res.status(501).json(error);
         });
 });
 
