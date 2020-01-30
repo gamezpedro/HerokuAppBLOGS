@@ -1,5 +1,4 @@
 let mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
 
 let blogSchema = mongoose.Schema({
     title : {type : String},
@@ -9,45 +8,54 @@ let blogSchema = mongoose.Schema({
     id : {type : Number, required : true, unique: true}
 });
 
-let Blog = mongoose.model('Blog', blogSchema);
+let BlogMod = mongoose.model('Blog', blogSchema);
 
 let BlogList = {
-    get : function(){
-		return Blog.find()
-				.then( blogs => {
-					return blogs;
-				})
-				.catch( error => {
-					throw Error( error );
-				});
-	},
-    post : function(newBlog){
-        return Blog.create(newBlog)
-                .then( blog => {
-                    return blog;
-                })
-                .catch( err=> {
-                    throw Error(err);   
-                });
+    getAll: function(){
+        return BlogMod.find()
+        .then(blog => blog)
+        
+        .catch(err => {
+            throw Error(err);
+        });
     },
-    put : function(filter, updInfo){
-        return Blog.updateOne(filter, updInfo)
-                .then( blog => {
-                    return blog;
-                })
-                .catch( err=> {
-                    throw Error(err);   
-                });
+
+    create: function(blog) {
+        return BlogMod.create(blog)
+        .then(response => console.log(response))
+        
+        .catch(err => {
+            throw Error(err);
+        });
     },
-    delete :  function(filter){
-        return Blog.deleteOne(filter)
-            .then( blog => {
-                return blog;
-            })
-            .catch( err=> {
-                throw Error(err);   
-            });
-    }
+
+    getByAuthor: function(autor) {
+        return BlogMod.find({ autor })
+        .then(blog => blog)
+        
+        .catch(err => {
+            throw Error(err);
+        });
+    },
+
+
+    update: function(id, update) {
+        return BlogMod.findByIdAndUpdate(id, update, { new: true })
+       .then(newObject => newObject)
+      
+       .catch(err => {
+            throw Error(err);
+       });
+    },
+
+    delete: function(id) {
+        return BlogMod.findByIdAndDelete(id)
+        .then(blog => blog)
+            
+        .catch(err => {
+            throw Error(err);
+        });
+    },
 }
 
 module.exports = { BlogList };

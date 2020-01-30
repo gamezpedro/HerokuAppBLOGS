@@ -46,11 +46,29 @@ let blogs = [
     },
 ];
 */
-
-
 app.get( '/blog-api/comentarios', (req, res) =>{
     //Gets all the Blogs
-    BlogList.get()
+    BlogList.getAll()
+        .then(blogs =>{
+            res.status(200).json(blogs)
+        })
+        .catch( error => {
+			res.statusMessage = "Can't Access Database";
+			return res.status( 500 ).json({
+				status : 500,
+				message : "Can't Access Database"
+			})
+		});
+});
+
+app.get( '/blog-api/comentarios-por-autor', (req, res) =>{
+    //Gets all the Blogs
+    let author = req.query.author;
+    if(!author){
+        res.statusMessage = "Author is Missing in Field";
+        return res.status(406).send();
+    }
+    BlogList.getByAuthor(author)
 		.then( blogs => {
 			return res.status( 200 ).json( blogs );
 		})
@@ -74,21 +92,18 @@ app.post('/blog-api/nuevo-comentario', jsonParser, (req, res) => {
 
     if(!title || !content || !id){
         res.statusMessage = "There is a Missing Field in body";
-        return res.status(406).json({
-            "error" : "Missing field",
-            "status" : 406
-        });
+        return res.status(406).send();
     }
     let newBlog = {
         title,
         content,
         author,
         date,
-        id
+        _id: uuid.v4()
      };
-    BlogList.post(newBlog)
-        .then(blog => {
-            res.status(201).json(blog);
+    BlogList.create(newBlog)
+        .then(blogs => {
+            res.status(201).json(blogs);
         })
         .catch(err => {
             res.statusMessage = "Something went wrong with the Database";
@@ -105,20 +120,20 @@ app.delete( '/blog-api/remover-comentario/:id', (req, res) => {
     let filter = req.params.id;
     if(!filter){
         res.statusMessage = "Missing id";
-        return res.status(406).json({
+        return res.status(404).json({
            "error" : "Missing id",
-           "status" : 406
+           "status" : 404
        });
     }
-    BlogList.delete({ id : filter })
-       .then(blog => {
-           res.status(201).json(blog);
+    BlogList.delete(filter)
+       .then(deleted => {
+           res.status(204).json({});
        })
        .catch(err => {
            res.statusMessage = "Missing field in body";
-           return res.status(500).json({
+           return res.status(404).json({
                "error" : "Something went wrong with the data base",
-               "status" : 500
+               "status" : 404
            });
        });
 });
@@ -126,6 +141,12 @@ app.delete( '/blog-api/remover-comentario/:id', (req, res) => {
 
 app.put( '/blog-api/actualizar-comentario/:id', jsonParser, (req, res) => {
     let filter = req.params.id;
+    let title = req.params.title;
+    let content = req.params.content;
+    let author = req.params.author;
+    let date = req.params.date;
+
+    let id = req.body.id;
     if(!filter || !req.body){
         res.statusMessage = "There is no ID in Field";
         return res.status(406).json({
@@ -133,12 +154,27 @@ app.put( '/blog-api/actualizar-comentario/:id', jsonParser, (req, res) => {
            "status" : 406
        });
     }
-    BlogList.put({ id : filter }, req.body)
+    if(id !== filter){
+        res.statusMessage = "Provided Id's are different";
+        return res.status(409).send();
+    }
+    
+    let updateObj = {
+        title : titulo,
+        content : content,
+        author: author,
+        date: date,
+        _id: uuid.v4()
+     };
+
+    BlogList.update(id, updateObj)
        .then(blog => {
-           res.status(201).json(blog);
+           if(blogs){
+            res.status(202).json(blog);
+           }
        })
        .catch(err => {
-           res.statusMessage = "Missing field in body";
+           res.statusMessage = "We have encountered Server Problems";
            return res.status(500).json({
                "error" : "Something went wrong with the data base",
                "status" : 500
