@@ -1,7 +1,7 @@
 let url = 'https://boiling-gorge-19777.herokuapp.com/blog-api'
 //let url = 'localhost:8080/blog-api'
 
-d
+
 function clearFields(){
     $("#idInput").val('');
     $("#titleInput").val('');
