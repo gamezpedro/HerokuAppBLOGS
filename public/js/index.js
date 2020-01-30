@@ -119,11 +119,11 @@ function deleteById(temporalId){
         url:(url + '/remover-comentario/' + temporalId), //url/endpointToAPI,
         type: "DELETE",
         success : function(res){
-            console.log('success on deleting');
+            console.log('correct deletion');
             getAllBlogs();
         },
         error : function(err){
-            console.log('error on deleting');
+            console.log('error');
         }
     });
 }

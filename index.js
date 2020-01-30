@@ -2,6 +2,7 @@ let express = require ('express');
 let morgan = require ('morgan');
 let uuid = require('uuid/v4');
 let mongoose = require('mongoose');
+
 let {BlogList} = require('./model.js');
 let {DATABASE_URL, PORT} = require('./config');
 
@@ -101,15 +102,15 @@ app.post('/blog-api/nuevo-comentario', jsonParser, (req, res) => {
 
 
 app.delete( '/blog-api/remover-comentario/:id', (req, res) => {
-    let id = req.params.id;
-    if(!id){
+    let filter = req.params.id;
+    if(!filter){
         res.statusMessage = "Missing id";
         return res.status(406).json({
            "error" : "Missing id",
            "status" : 406
        });
     }
-    BlogList.delete({ id : id })
+    BlogList.delete({ id : filter })
        .then(blog => {
            res.status(201).json(blog);
        })
@@ -124,15 +125,15 @@ app.delete( '/blog-api/remover-comentario/:id', (req, res) => {
 
 
 app.put( '/blog-api/actualizar-comentario/:id', jsonParser, (req, res) => {
-    let id = req.params.id;
-    if(!id || !req.body){
+    let filter = req.params.id;
+    if(!filter || !req.body){
         res.statusMessage = "There is no ID in Field";
         return res.status(406).json({
            "error" : "Missing ID",
            "status" : 406
        });
     }
-    BlogList.put({ id : id }, req.body)
+    BlogList.put({ id : filter }, req.body)
        .then(blog => {
            res.status(201).json(blog);
        })
