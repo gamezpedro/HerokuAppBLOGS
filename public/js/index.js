@@ -1,4 +1,4 @@
-//let url = 'http://localhost:8080/blog-api';
+let url = "https://boiling-gorge-19777.herokuapp.com/blog-api"
 
 function clearFields(){
     $("#idInput").val('');
