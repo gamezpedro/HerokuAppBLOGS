@@ -1,7 +1,7 @@
 let url = 'https://boiling-gorge-19777.herokuapp.com/blog-api'
 //let url = 'localhost:8080/blog-api'
 
-
+d
 function clearFields(){
     $("#idInput").val('');
     $("#titleInput").val('');
@@ -108,7 +108,7 @@ function postNewBlog(newBlog){
         url:(url + '/nuevo-comentario'), //url/endpointToAPI,
         type: "POST", 
         data: JSON.stringify(newBlog),
-        contentType: "application/json; charset=utf-8",
+        contentType: "application/json",
         success : function(result){
             getAllBlogs();
         }

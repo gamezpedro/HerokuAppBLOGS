@@ -81,7 +81,6 @@ app.post('/blog-api/nuevo-comentario', jsonParser, (req, res) => {
     let title = req.body.title;
     let author = req.body.author;
     let content = req.body.content;
-    let date = req.body.date;
 
     console.log(title);
     console.log(author);
@@ -99,6 +98,7 @@ app.post('/blog-api/nuevo-comentario', jsonParser, (req, res) => {
         date,
         _id: uuid.v4()
      };
+     
     BlogList.create(newblog)
         .then(_response => {
             res.status(201).json(newblog);
