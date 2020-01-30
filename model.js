@@ -8,13 +8,13 @@ let blogSchema = mongoose.Schema({
     id : {type : Number, required : true, unique: true}
 });
 
-let BlogMod = mongoose.model('Blog', blogSchema);
+let BlogMod = mongoose.model('blog', blogSchema);
 
 let BlogList = {
     getAll: function(){
         return BlogMod.find()
         .then(blog => {
-            return blogs;
+            return blog;
         })
         .catch(err => {
             throw Error(err);
