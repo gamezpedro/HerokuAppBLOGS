@@ -1,5 +1,5 @@
-//let url = 'https://boiling-gorge-19777.herokuapp.com/blog-api'
-let url = 'localhost:8080/blog-api'
+let url = 'https://boiling-gorge-19777.herokuapp.com/blog-api'
+//let url = 'localhost:8080/blog-api'
 
 
 function clearFields(){
