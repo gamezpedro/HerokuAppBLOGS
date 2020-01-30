@@ -54,10 +54,7 @@ app.get( '/blog-api/comentarios', (req, res) =>{
         })
         .catch( error => {
 			res.statusMessage = "Can't Access Database";
-			return res.status( 500 ).json({
-				status : 500,
-				message : "Can't Access Database"
-			})
+			return res.status( 500 ).send();
 		});
 });
 
@@ -74,10 +71,7 @@ app.get( '/blog-api/comentarios-por-autor', (req, res) =>{
 		})
 		.catch( error => {
 			res.statusMessage = "Can't Access Database";
-			return res.status( 500 ).json({
-				status : 500,
-				message : "Can't Access Database"
-			})
+			return res.status( 500 ).send();
 		});
 });
 
@@ -90,7 +84,7 @@ app.post('/blog-api/nuevo-comentario', jsonParser, (req, res) => {
     let date = req.body.date;
     let id = req.body.id;
 
-    if(!title || !content || !id){
+    if(!title || !content || !id || !author){
         res.statusMessage = "There is a Missing Field in body";
         return res.status(406).send();
     }
@@ -101,16 +95,13 @@ app.post('/blog-api/nuevo-comentario', jsonParser, (req, res) => {
         date,
         _id: uuid.v4()
      };
-    BlogList.create(newBlog)
-        .then(blogs => {
-            res.status(201).json(blogs);
+    BlogList.create(blog)
+        .then(_response => {
+            res.status(201).json(blog);
         })
         .catch(err => {
             res.statusMessage = "Something went wrong with the Database";
-            return res.status(501).json({
-                "error" : "Something went wrong with the Database",
-                "status" : 501
-            });
+            return res.status(501).send();
         });
 });
 
@@ -120,10 +111,7 @@ app.delete( '/blog-api/remover-comentario/:id', (req, res) => {
     let filter = req.params.id;
     if(!filter){
         res.statusMessage = "Missing id";
-        return res.status(404).json({
-           "error" : "Missing id",
-           "status" : 404
-       });
+        return res.status(404).send()
     }
     BlogList.delete(filter)
        .then(deleted => {
@@ -131,10 +119,7 @@ app.delete( '/blog-api/remover-comentario/:id', (req, res) => {
        })
        .catch(err => {
            res.statusMessage = "Missing field in body";
-           return res.status(404).json({
-               "error" : "Something went wrong with the data base",
-               "status" : 404
-           });
+           return res.status(404).json();
        });
 });
 
@@ -149,36 +134,29 @@ app.put( '/blog-api/actualizar-comentario/:id', jsonParser, (req, res) => {
     let id = req.body.id;
     if(!filter || !req.body){
         res.statusMessage = "There is no ID in Field";
-        return res.status(406).json({
-           "error" : "Missing ID",
-           "status" : 406
-       });
+        return res.status(406).send();
     }
     if(id !== filter){
-        res.statusMessage = "Provided Id's are different";
+        res.statusMessage = "Provided Id is not correct";
         return res.status(409).send();
     }
     
-    let updateObj = {
-        title : titulo,
-        content : content,
-        author: author,
-        date: date,
-        _id: uuid.v4()
-     };
+    const newO = {
+        ...(title && { title }),
+        ...(content && { content }),
+        ...(author && { author }),
+        ...(date && { date })
+    };
 
-    BlogList.update(id, updateObj)
+    BlogList.update(id, newO)
        .then(blog => {
-           if(blogs){
+           if(blog){
             res.status(202).json(blog);
            }
        })
        .catch(err => {
            res.statusMessage = "We have encountered Server Problems";
-           return res.status(500).json({
-               "error" : "Something went wrong with the data base",
-               "status" : 500
-           });
+           return res.status(500).send();
        });
 });
 

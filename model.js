@@ -13,8 +13,9 @@ let BlogMod = mongoose.model('Blog', blogSchema);
 let BlogList = {
     getAll: function(){
         return BlogMod.find()
-        .then(blog => blog)
-        
+        .then(blog => {
+            return blogs;
+        })
         .catch(err => {
             throw Error(err);
         });
@@ -22,8 +23,9 @@ let BlogList = {
 
     create: function(blog) {
         return BlogMod.create(blog)
-        .then(response => console.log(response))
-        
+        .then(response => {
+            return response;
+        })
         .catch(err => {
             throw Error(err);
         });
@@ -31,8 +33,9 @@ let BlogList = {
 
     getByAuthor: function(autor) {
         return BlogMod.find({ autor })
-        .then(blog => blog)
-        
+        .then(blog => {
+            return blog;
+        })
         .catch(err => {
             throw Error(err);
         });
@@ -41,8 +44,9 @@ let BlogList = {
 
     update: function(id, update) {
         return BlogMod.findByIdAndUpdate(id, update, { new: true })
-       .then(newObject => newObject)
-      
+       .then(newObject => {
+            return newObject;
+       })
        .catch(err => {
             throw Error(err);
        });
@@ -50,8 +54,9 @@ let BlogList = {
 
     delete: function(id) {
         return BlogMod.findByIdAndDelete(id)
-        .then(blog => blog)
-            
+        .then(blog => {
+            return blog
+        })
         .catch(err => {
             throw Error(err);
         });
