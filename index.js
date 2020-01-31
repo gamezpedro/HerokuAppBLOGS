@@ -1,6 +1,6 @@
 let express = require ('express');
 let morgan = require ('morgan');
-let uuid = require('uuid/v4');
+//let uuid = require('uuid/v4');
 let mongoose = require('mongoose');
 
 let {BlogList} = require('./model.js');
@@ -95,7 +95,7 @@ app.post('/blog-api/nuevo-comentario', jsonParser, (req, res) => {
         content,
         author,
         date,
-        _id: uuid.v4()
+        id,
      };
 
     BlogList.create(newblog)
