@@ -99,7 +99,7 @@ app.post('/blog-api/nuevo-comentario', jsonParser, (req, res) => {
      };
 
     BlogList.create(newblog)
-        .then(_response => {
+        .then( newblog => {
             res.status(201).json(newblog);
         })
         .catch(err => {
@@ -133,8 +133,8 @@ app.put( '/blog-api/actualizar-comentario/:id', jsonParser, (req, res) => {
     let content = req.params.content;
     let author = req.params.author;
     let date = req.params.date;
-
     let id = req.body.id;
+
     if(!filter || !req.body){
         res.statusMessage = "There is no ID in Field";
         return res.status(406).send();
@@ -143,15 +143,9 @@ app.put( '/blog-api/actualizar-comentario/:id', jsonParser, (req, res) => {
         res.statusMessage = "Provided Id is not correct";
         return res.status(409).send();
     }
-    
-    const newO = {
-        ...(title && { title }),
-        ...(content && { content }),
-        ...(author && { author }),
-        ...(date && { date })
-    };
 
-    BlogList.update(id, newO)
+
+    BlogList.update(id, req.body)
        .then(blog => {
            if(blog){
             res.status(202).json(blog);
