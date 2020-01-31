@@ -99,9 +99,8 @@ app.post('/blog-api/nuevo-comentario', jsonParser, (req, res) => {
      };
 
     BlogList.create(newblog)
-        .then( blog => {
-            return res.status(201).json(blog);
-        })
+        .then( blog => res.status(201).json(newBlog))
+    
         .catch(err => {
             res.statusMessage = "Something went wrong with the Database";
             return res.status(500).send();
