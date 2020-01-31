@@ -21,10 +21,10 @@ let BlogList = {
         });
     },
 
-    create: function(blog) {
-        return BlogMod.create(blog)
-        .then(response => {
-            return response;
+    create : function( newblog ) {
+        return BlogMod.create( newblog )
+        .then(blog => {
+            return blog;
         })
         .catch(err => {
             throw Error(err);
