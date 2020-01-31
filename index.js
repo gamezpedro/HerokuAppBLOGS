@@ -100,6 +100,9 @@ app.post('/blog-api/nuevo-comentario', jsonParser, (req, res) => {
 
     BlogList.create(newblog)
         .then( blog => {
+            console.log(blog);
+            console.log(res);
+            console.log(res.status(201));
             return res.status(201).json(blog);
         })
     
@@ -149,6 +152,7 @@ app.put( '/blog-api/actualizar-comentario/:id', jsonParser, (req, res) => {
 
     BlogList.update(id, req.body)
        .then(blog => {
+           console.log(blog);
            if(blog){
             res.status(202).json(blog);
            }
