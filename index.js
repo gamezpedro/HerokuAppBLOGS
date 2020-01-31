@@ -104,6 +104,7 @@ app.post('/blog-api/nuevo-comentario', jsonParser, (req, res) => {
         })
     
         .catch(err => {
+            console.log(err.statusMessage);
             res.statusMessage = "Something went wrong with the Database";
             return res.status(500).send();
         });
